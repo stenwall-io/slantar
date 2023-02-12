@@ -6,7 +6,13 @@ import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 import { request } from 'graphql-request'
 
-const fetcher = query => request('/api/graphql', query)
+const fetcher = query => request('/api/graphql', query).then(res => {
+  console.log(res);
+  if (res.errors) {
+    res.errors.forEach((err) => console.log(err.message))
+  }
+  return res.data
+})
 
 const MyApp = ({
   Component,
