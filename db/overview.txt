@@ -1,0 +1,27 @@
+AccountRow
+- type (inkomst, utgift, överföring/sparas)
+- date
+- text
+- amount
+- [subrows]
+- account (ref Account)
+
+SubRow
+- amount
+- class?
+
+RowClass
+- name
+- group
+
+Month
+- year: Int
+- month: Int
+- startDate: Date
+- nextMonth (ref Month)
+
+Account
+- name
+- [owners] (ref User)
+
+
