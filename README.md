@@ -3,6 +3,5 @@ Teknik som används
 - Mongoose
 - SWR
 - GraphQL Yoga 2
-- Nexus
 - Typescript
 - Next-auth
