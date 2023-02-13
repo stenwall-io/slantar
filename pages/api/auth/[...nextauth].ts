@@ -3,7 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { User } from '@models/index';
 import 'db/index';
 
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -16,6 +15,7 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({
           username: credentials.username,
         }).exec();
+
         if (user.password === credentials.password) {
           return user.toObject();
         } else {
@@ -29,7 +29,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.user = user;
       }
-
       return token;
     },
     async session({ session, token }) {

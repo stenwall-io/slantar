@@ -11,11 +11,11 @@ export default function SignIn({
     <form method="post" action="/api/auth/callback/credentials">
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
       <label>
-        Användarnamn
+        Användarnamn:
         <input name="username" type="text" />
       </label>
       <label>
-        Lösenord
+        Lösenord:
         <input name="password" type="password" />
       </label>
       <button type="submit">Logga in</button>
