@@ -1,9 +1,9 @@
 import Account, { IAccount } from '@models/account';
 import AccountRow, { IAccountRow } from '@models/accountRow';
 import Month, { IMonth } from '@models/month';
-import RowCLass, { IRowClass } from '@models/rowClass';
+import Category, { ICategory } from '@models/category';
 import User, { IUser } from '@models/user';
 
-export { Account, AccountRow, Month, RowCLass, User };
+export { Account, AccountRow, Month, Category, User };
 
-export type { IAccount, IAccountRow, IMonth, IRowClass, IUser };
+export type { IAccount, IAccountRow, IMonth, ICategory, IUser };
