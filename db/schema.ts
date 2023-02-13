@@ -8,6 +8,7 @@ type Query {
     info: String
     account(id: ID): Account
     accounts: [Account]
+    accountRows(accountId: ID): [AccountRow]
     user(id: ID): User
     users: [User]
 }
@@ -25,11 +26,12 @@ type Account{
 }
 
 type AccountRow{
+    id: String!
+    account: Account!
     date: Date!
     text: String!
     amount: Float!
     subrows: [SubRow!]!
-    account: Account!
 }
 
 type SubRow{
