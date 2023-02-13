@@ -8,14 +8,24 @@ import { SessionProvider } from 'next-auth/react';
 import { request } from 'graphql-request';
 import LogOutButton from '@components/logoutbutton/logoutbutton';
 
-const fetcher = query => request('/api/graphql', query).then(res => {
-  console.log(res);
+const fetcher = (query: string) => {
+  if (process.env.NODE_ENV === 'development') console.log('GRAPHQL QUERY:', query)
+  return request('/api/graphql', query)
+    .then((res) => {
       if (res.errors) {
-    res.errors.forEach((err) => console.log(err.message))
+        res.errors.forEach((err) => console.log('SERVER ERROR', err.message));
       }
-  return res.data
+      if (process.env.NODE_ENV === 'development') console.log('GRAPHQL RESPONSE:', res)
+      return res;
     })
-
+    .catch((err) => {
+      if (err) {
+        err.response.errors.forEach((ierr) =>
+          console.log('SERVER ERROR:', ierr.message)
+        );
+      }
+    });
+};
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
