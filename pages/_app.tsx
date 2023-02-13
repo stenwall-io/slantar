@@ -2,17 +2,19 @@
 import { ReactNode, useEffect } from 'react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
+import Link from 'next/link';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
-import { request } from 'graphql-request'
+import { request } from 'graphql-request';
+import LogOutButton from '@components/logoutbutton/logoutbutton';
 
 const fetcher = query => request('/api/graphql', query).then(res => {
   console.log(res);
-  if (res.errors) {
+      if (res.errors) {
     res.errors.forEach((err) => console.log(err.message))
-  }
+      }
   return res.data
-})
+    })
 
 const MyApp = ({
   Component,
@@ -47,6 +49,10 @@ const MyApp = ({
       >
         {/* {getLayout(<Component {...pageProps} />)} */}
         <SessionProvider session={session}>
+          <div>
+          <Link href="/">hem</Link> <Link href="/account/import">import</Link>
+          <LogOutButton />
+          </div>
           <Component {...pageProps} />
         </SessionProvider>
       </SWRConfig>
