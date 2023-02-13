@@ -1,20 +1,27 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
-import { IRowClass } from '@models/index';
+import { IAccount, ICategory } from '@models/index';
 
 export interface IAccountRow {
   _id: Types.ObjectId;
+  id: string;
+  account: PopulatedDoc<IAccount['_id'] & IAccount>;
   date: Date;
   text: string;
+  desc: string;
   amount: number;
   subrows: Array<ISubRow>;
 }
 
 interface ISubRow {
-  rowClass: PopulatedDoc<IRowClass['_id'] & IRowClass>;
+  category: PopulatedDoc<ICategory['_id'] & ICategory>;
   amount: number;
 }
 
 const AccountRowSchema = new Schema<IAccountRow>({
+  account: {
+    type: Schema.Types.ObjectId,
+    ref: 'Account',
+  },
   date: {
     type: Date,
     required: true,
@@ -23,11 +30,19 @@ const AccountRowSchema = new Schema<IAccountRow>({
     type: String,
     required: true,
     trim: true,
+    default: ''
+  },
+  desc: {
+    type: String,
+    required: false,
+    trim: true,
+    default: ''
   },
   amount: {
     type: Number,
     required: true,
     trim: true,
+    default: 0.0
   },
 });
 

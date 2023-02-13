@@ -2,6 +2,7 @@ import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 
 export interface IMonth {
   _id: Types.ObjectId;
+  id: string;
   name: string;
   startDate: Date;
   nextMonth: PopulatedDoc<IMonth['_id'] & IMonth>;

@@ -3,6 +3,7 @@ import { IUser } from '@models/index';
 
 export interface IAccount {
   _id: Types.ObjectId;
+  id: string;
   name: string;
   owners: Types.Array<PopulatedDoc<IUser['_id'] & IUser>>;
 }
