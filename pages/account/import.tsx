@@ -24,6 +24,7 @@ export default function Import() {
   if (accountRes.isLoading) return <div>Loading...</div>;
 
   const { accounts } = accountRes.data;
+  const accountRows = accountRowRes.data ? accountRowRes.data.accountRows : [];
 
   const selectAccount = (event) => {
     const { value } = event.target;
@@ -64,8 +65,16 @@ export default function Import() {
     // find row "friends" already in account
     // for now just set det save flag
     return parsedRows.map((row) => {
-      row.save = true;
-      return row;
+      row.friend = accountRows
+        .filter(
+          (ar) => new Date(ar.date).toLocaleDateString('sv-SE') === row.date
+        )
+        .filter((ar) => ar.text === row.text)
+        .filter((ar) => ar.amount === row.amount);
+      if (row.friend.length == 0) row.status = 'save';
+      else if (row.friend.length > 1) row.status = 'multiple';
+      else row.status = 'duplicate';
+      return row
     });
   };
 
@@ -73,7 +82,7 @@ export default function Import() {
     if (accountId && text) {
       let parsedRows = parseRows();
       if (parsedRows) {
-        parsedRows = findFriends(parsedRows);
+        parsedRows = findFriends(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
         setRows(parsedRows);
         setSent(true);
       }
@@ -92,6 +101,18 @@ export default function Import() {
     const mutationQuery = `mutation { ${mutations.join('\n')}}`;
     console.log(mutationQuery);
     request('/api/graphql', mutationQuery);
+  };
+
+  const statusSymbol = (status) => {
+    switch (status) {
+      case 'save':
+        return '-->';
+      case 'multiple':
+        return ' ! ';
+      case 'duplicate':
+        return ' X ';
+    }
+    return '';
   };
 
   if (!sent) {
@@ -119,9 +140,7 @@ export default function Import() {
     );
   } else {
     // show after form is sent
-    if (accountRowRes.isLoading) return <div>Loading...</div>;
 
-    const { accountRows } = accountRowRes.data;
     return (
       <>
         <span onClick={() => setSent(false)}>{'<-'}</span>
@@ -140,7 +159,7 @@ export default function Import() {
                 <td>{row.date.toString()}</td>
                 <td>{row.text}</td>
                 <td>{row.amount}</td>
-                <td>{'-->'}</td>
+                <td>{statusSymbol(row.status)}</td>
               </tr>
             ))}
           </tbody>
