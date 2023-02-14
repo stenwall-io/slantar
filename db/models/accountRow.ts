@@ -2,8 +2,8 @@ import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 import { IAccount, ICategory } from '@models/index';
 
 export interface IAccountRow {
-  _id: Types.ObjectId;
-  id: string;
+  _id?: Types.ObjectId;
+  id?: string;
   account: PopulatedDoc<IAccount['_id'] & IAccount>;
   date: Date;
   text: string;

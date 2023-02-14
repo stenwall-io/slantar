@@ -1,8 +1,8 @@
 import { Schema, Model, model, models, Types } from 'mongoose';
 
 export interface ICategory {
-  _id: Types.ObjectId;
-  id: string;
+  _id?: Types.ObjectId;
+  id?: string;
   name: string;
   group: string;
 }
