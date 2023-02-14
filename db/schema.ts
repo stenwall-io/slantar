@@ -15,18 +15,19 @@ type Query {
 
 type Mutation {
     createAccount(name: String!, ownerId: ID!): Account
+    createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!): AccountRow
 }
 
 ${DateTypeDefinition}
 
 type Account{
-    id: String!
+    id: String
     name: String!
     owners: [User!]!
 }
 
 type AccountRow{
-    id: String!
+    id: String
     account: Account!
     date: Date!
     text: String!
@@ -35,17 +36,20 @@ type AccountRow{
 }
 
 type SubRow{
+    id: String
     amount: Float!
-    rowClass: RowClass
+    category: Category
 }
 
 type Month{
-    name: String!
+    id: String
+    year: Int!
+    mongth: Int!
     startDate: Date!
-    nameMonth: Month
 }
 
-type RowClass{
+type Category{
+    id: String
     name: String!
     group: String!
 }
@@ -53,6 +57,7 @@ type RowClass{
 type User{
     id: String!
     name: String!
+    username: String!
 }  
 `;
 

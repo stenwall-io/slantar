@@ -3,10 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Account } from '@models/index';
 import { IAccountRow } from '@models/index';
+import { request } from 'graphql-request';
 
 export default function Import() {
   const [sent, setSent] = useState(false);
-  const [account, setAccount] = useState(0);
+  const [accountId, setAccountId] = useState(0);
   const [text, setText] = useState('');
   const [rows, setRows] = useState([]);
 
@@ -14,18 +15,19 @@ export default function Import() {
 
   const accountRes = useSWR('{ accounts{ id name }}');
   const accountRowRes = useSWR(
-    account
-      ? `{ accountRows(accountId:"${account}"){ date text amount }}`
+    accountId
+      ? `{ accountRows(accountId:"${accountId}"){ date text amount }}`
       : null
   );
 
+  if (accountRes.error) return <div>Error!</div>;
   if (accountRes.isLoading) return <div>Loading...</div>;
 
   const { accounts } = accountRes.data;
 
   const selectAccount = (event) => {
     const { value } = event.target;
-    setAccount(value);
+    setAccountId(value);
   };
   const onTextChange = (event) => {
     const { value } = event.target;
@@ -54,30 +56,50 @@ export default function Import() {
           return accountRow;
         }
       });
-    //console.log(rows);
-    setRows(rows);
+    console.log(rows);
+    return rows;
   };
 
-  const findFriends = () => {
+  const findFriends = (parsedRows) => {
     // find row "friends" already in account
-  }
+    // for now just set det save flag
+    return parsedRows.map((row) => {
+      row.save = true;
+      return row;
+    });
+  };
 
   const handleSubmit = () => {
-    if (account && text) {
-      parseRows();
-      if (rows) {
-        findFriends();
+    if (accountId && text) {
+      let parsedRows = parseRows();
+      if (parsedRows) {
+        parsedRows = findFriends(parsedRows);
+        setRows(parsedRows);
         setSent(true);
       }
     }
+  };
+
+  const saveRows = () => {
+    const mutations = rows
+      .filter((row) => row.save)
+      .map(
+        (row, i) =>
+          `m${i}: createAccountRow(accountId: "${accountId}" date:"${row.date.toString()}", text:"${
+            row.text
+          }", amount:${row.amount}){ id }`
+      );
+    const mutationQuery = `mutation { ${mutations.join('\n')}}`;
+    console.log(mutationQuery);
+    request('/api/graphql', mutationQuery);
   };
 
   if (!sent) {
     return (
       <>
         <div>
-          <select name="accounts" value={account} onChange={selectAccount}>
-            <option key="" value="">
+          <select name="accounts" value={accountId} onChange={selectAccount}>
+            <option key="" value="0">
               Välj konto
             </option>
             {accounts.map(({ id, name }) => (
@@ -90,20 +112,19 @@ export default function Import() {
         <div>
           <textarea value={text} onChange={onTextChange}></textarea>
         </div>
-        <button disabled={!account || !text} onClick={handleSubmit}>
-          Submit
+        <button disabled={!accountId || !text} onClick={handleSubmit}>
+          Läs in
         </button>
       </>
     );
-  } else { // show after form is sent
+  } else {
+    // show after form is sent
     if (accountRowRes.isLoading) return <div>Loading...</div>;
 
     const { accountRows } = accountRowRes.data;
     return (
       <>
-        <span onClick={() => setSent(false)} title={'back'}>
-          {'<-'}
-        </span>
+        <span onClick={() => setSent(false)}>{'<-'}</span>
 
         <table>
           <thead>
@@ -114,16 +135,17 @@ export default function Import() {
             </tr>
           </thead>
           <tbody>
-          {rows.map((row: IAccountRow) => (
-            <tr>
-              <td>{row.date}</td>
-              <td>{row.text}</td>
-              <td>{row.amount}</td>
-            </tr>
-          )
-          )}
+            {rows.map((row: any) => (
+              <tr>
+                <td>{row.date.toString()}</td>
+                <td>{row.text}</td>
+                <td>{row.amount}</td>
+                <td>{'-->'}</td>
+              </tr>
+            ))}
           </tbody>
-          </table>
+        </table>
+        <button onClick={saveRows}>Spara</button>
       </>
     );
   }
