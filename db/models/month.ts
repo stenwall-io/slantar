@@ -1,26 +1,25 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 
 export interface IMonth {
-  _id: Types.ObjectId;
-  id: string;
-  name: string;
+  _id?: Types.ObjectId;
+  id?: string;
+  year: number;
+  month: number;
   startDate: Date;
-  nextMonth: PopulatedDoc<IMonth['_id'] & IMonth>;
 }
 
 const MonthSchema = new Schema<IMonth>({
-  name: {
-    type: String,
+  year: {
+    type: Number,
     required: true,
-    trim: true,
+  },
+  month: {
+    type: Number,
+    required: true,
   },
   startDate: {
     type: Date,
     required: true,
-  },
-  nextMonth: {
-    type: Schema.Types.ObjectId,
-    ref: 'Month',
   },
 });
 
