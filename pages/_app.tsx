@@ -7,6 +7,7 @@ import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 import { request } from 'graphql-request';
 import LogOutButton from '@components/logoutbutton/logoutbutton';
+import useSWR from 'swr';
 
 const fetcher = (query: string) => {
   if (process.env.NODE_ENV === 'development') console.log('GRAPHQL QUERY:', query)
@@ -30,6 +31,7 @@ const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => {
+  const { data:accountsData } = useSWR('{ accounts{ id name }}');
   // const getLayout = Component.getLayout || ((page: ReactNode) => page);
 
   // useEffect(() => {
@@ -61,6 +63,13 @@ const MyApp = ({
         <SessionProvider session={session}>
           <div>
           <Link href="/">hem</Link> <Link href="/account/import">import</Link>
+          {accountsData && (
+            accountsData.accounts.map((a, i) => (
+               <Link key={i} href={{ pathname: '/account/[accountId]', query: { accountId: a.id } }}>{a.name}</Link>
+            ))
+          )
+
+          }
           <LogOutButton />
           </div>
           <Component {...pageProps} />
