@@ -22,4 +22,8 @@ export const mutations = {
     ar.save();
     return ar;
   },
+  deleteAccountRow: async (_, { id }) => {
+    AccountRow.findByIdAndDelete(id);
+    return id;
+  },
 };
