@@ -90,7 +90,6 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
       let parsedRows = parseRows();
       if (parsedRows) {
         findFriends(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
-        console.log(parsedRows);
         setRows(parsedRows);
       }
     }
@@ -98,17 +97,16 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
 
   const parseRows = () => {
     const baseRows = rowsText.split('\n'); // Split into array of rows
-    //console.log(baseRows);
+
     const rows = baseRows
       .map((row: string) => row.split('\t \t')) // Split each row into columns
       .filter((splitRow: Array<string>) => {
         // Filter away 'Prel' rows
-        //console.log(splitRow[2]);
-        return splitRow[2] && !splitRow[2].startsWith('Prel');
+        if (!splitRow || splitRow.length != 5) return false;
+        return splitRow[1].charAt(0) == '2' && !splitRow[2].startsWith('Prel');
       })
       .map((splitRow: Array<string>) => {
-        // create array of lightweight AccoutRow objects
-        //console.log(splitRow);
+        // create array of "lightweight" AccoutRow objects
         if (splitRow.length == 5) {
           const accountRow = {
             date: splitRow[1],
@@ -145,8 +143,7 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
           }", amount:${row.amount}){ id }`
       );
     const mutationQuery = `mutation { ${mutations.join('\n')}}`;
-    console.log(mutationQuery);
-    //request('/api/graphql', mutationQuery);
+    request('/api/graphql', mutationQuery);
   };
 
   return (
@@ -205,7 +202,7 @@ const ImportAccountRowsRow = ({ row }) => {
             {symbol}
           </button>
         </td>
-        {row.friends && (
+        {row.friends.length == 1 && (
           <>
             <td>{new Date(row.friends[0].date).toLocaleDateString('sv-SE')}</td>
             <td>{row.friends[0].text}</td>
@@ -217,28 +214,28 @@ const ImportAccountRowsRow = ({ row }) => {
   } else {
     return (
       <>
-      <tr>
-        <td>{row.date}</td>
-        <td>{row.text}</td>
-        <td>{row.amount}</td>
-        <td>
-          <button onClick={toggleSave}>
-            {row.duplicate ? '! ' : ''}
-            {symbol}
-          </button>
-        </td>
-        <td>{new Date(row.friends[0].date).toLocaleDateString('sv-SE')}</td>
-        <td>{row.friends[0].text}</td>
-        <td>{row.friends[0].amount}</td>
-      </tr>
-      {row.friends.map((f) => (
         <tr>
-          <td colSpan={4}></td>
-          <td>{new Date(f.date).toLocaleDateString('sv-SE')}</td>
-          <td>{f.text}</td>
-          <td>{f.amount}</td>
+          <td>{row.date}</td>
+          <td>{row.text}</td>
+          <td>{row.amount}</td>
+          <td>
+            <button onClick={toggleSave}>
+              {row.duplicate ? '! ' : ''}
+              {symbol}
+            </button>
+          </td>
+          <td>{new Date(row.friends[0].date).toLocaleDateString('sv-SE')}</td>
+          <td>{row.friends[0].text}</td>
+          <td>{row.friends[0].amount}</td>
         </tr>
-      ))}
+        {row.friends.map((f) => (
+          <tr>
+            <td colSpan={4}></td>
+            <td>{new Date(f.date).toLocaleDateString('sv-SE')}</td>
+            <td>{f.text}</td>
+            <td>{f.amount}</td>
+          </tr>
+        ))}
       </>
     );
   }
