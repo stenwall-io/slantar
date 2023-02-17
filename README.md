@@ -1,5 +1,7 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a name="readme-top"></a>
+
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
 *** that would make this better, please fork the repo and create a pull request
@@ -8,23 +10,24 @@
 *** Thanks again! Now go create something AMAZING! :D
 -->
 
-
-
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-
+<p align="center">
+	<a href="https://github.com/stenwall-io/slantar/graphs/contributors">
+		<img alt="Contributors" src="https://img.shields.io/github/contributors/stenwall-io/slantar.svg?style=for-the-badge" />
+	</a>
+	<a href="https://github.com/stenwall-io/slantar/network/members">
+		<img alg="Forks" src="https://img.shields.io/github/forks/stenwall-io/slantar.svg?style=for-the-badge" />
+	</a>
+	<a href="https://github.com/stenwall-io/slantar/stargazers">
+		<img alt="Stars" src="https://img.shields.io/github/stars/stenwall-io/slantar.svg?style=for-the-badge" />
+	</a>
+  <a href="https://github.com/stenwall-io/slantar/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/stenwall-io/slantar.svg?style=for-the-badge" />
+	</a>
+  <a href="https://github.com/stenwall-io/slantar/blob/main/LICENSE">
+		<img alt="License" src="https://img.shields.io/github/license/stenwall-io/slantar.svg?style=for-the-badge" />
+	</a>
+</p>
 
 <!-- PROJECT LOGO -->
 <br />
@@ -48,8 +51,6 @@
     <a href="https://github.com/stenwall-io/slantar/issues">Request Feature</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -77,9 +78,8 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
@@ -88,21 +88,18 @@ A penny saved is a penny earned. At least on a rainy day.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 ### Built With
 
-* [Next.js][Next-url]
-* [Mongoose][Mongoose-url]
-* [SWR][SWR-url]
-* [GraphQL Yoga 3][Yoga-url]
-* [NextAuth.js][NextAuth-url]
+- [Next.js][Next-url]
+- [Mongoose][Mongoose-url]
+- [SWR][SWR-url]
+- [GraphQL Yoga 3][Yoga-url]
+- [NextAuth.js][NextAuth-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 Feel free to use Yarn or NPM, nbut please use Yarn if you want to contribute so there's no clashes.
@@ -133,8 +130,6 @@ yarn dev
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
 <!-- ## Usage
 
@@ -143,8 +138,6 @@ Use this space to show useful examples of how a project can be used. Additional 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
-
-
 
 <!-- ROADMAP -->
 <!-- ## Roadmap
@@ -157,8 +150,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 See the [open issues](https://github.com/stenwall-io/slantar/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
-
-
 
 <!-- CONTRIBUTING -->
 <!-- ## Contributing
@@ -176,28 +167,23 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
-
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
+
 ## Contact
 
 Karin - [stenwall@GitHub](https://github.com/stenwall)
 
 David - [dafvid@GitHub](https://github.com/dafvid)
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
 <!-- ## Acknowledgments
@@ -208,10 +194,9 @@ David - [dafvid@GitHub](https://github.com/dafvid)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/stenwall-io/slantar.svg?style=for-the-badge
 [contributors-url]: https://github.com/stenwall-io/slantar/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/stenwall-io/slantar.svg?style=for-the-badge
@@ -235,4 +220,4 @@ David - [dafvid@GitHub](https://github.com/dafvid)
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+[JQuery-url]: https://jquery.com
