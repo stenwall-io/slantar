@@ -1075,7 +1075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:13.1.6":
+"@next/eslint-plugin-next@npm:13.1.6, @next/eslint-plugin-next@npm:^13.1.6":
   version: 13.1.6
   resolution: "@next/eslint-plugin-next@npm:13.1.6"
   dependencies:
@@ -4078,6 +4078,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "slantar@workspace:."
   dependencies:
+    "@next/eslint-plugin-next": ^13.1.6
     "@next/font": 13.1.6
     "@types/node": ^18.13.0
     "@types/react": ^18.0.28
