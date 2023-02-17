@@ -42,7 +42,7 @@ const MyApp = ({
         {/* {getLayout(<Component {...pageProps} />)} */}
         <SessionProvider session={session}>
           <div>
-          <Link href="/">hem</Link> <Link href="/account/import">import</Link>
+          <Link href="/">hem</Link> <Link href="/account/import">import</Link> <Link href="/month">månad</Link>
           {accountsData && (
             accountsData.accounts.map((a, i) => (
                <Link key={i} href={{ pathname: '/account/[accountId]', query: { accountId: a.id } }}>{a.name}</Link>

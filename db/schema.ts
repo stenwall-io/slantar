@@ -11,12 +11,15 @@ type Query {
     accountRows(accountId: ID): [AccountRow]
     user(id: ID): User
     users: [User]
+    month(id: ID): Month
+    months: [Month]
 }
 
 type Mutation {
     createAccount(name: String!, ownerId: ID!): Account!
     createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!): AccountRow!
     deleteAccountRow(id: ID!): ID
+    createMonth(year: Int! month: Int startDate: Date!): Month
 }
 
 ${DateTypeDefinition}
@@ -32,6 +35,7 @@ type AccountRow{
     account: Account!
     date: Date!
     text: String!
+    desc: String!
     amount: Float!
     subrows: [SubRow!]!
 }
@@ -45,8 +49,9 @@ type SubRow{
 type Month{
     id: String
     year: Int!
-    mongth: Int!
+    month: Int!
     startDate: Date!
+    name: String!
 }
 
 type Category{

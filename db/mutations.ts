@@ -1,4 +1,4 @@
-import { Account, AccountRow, IAccountRow, User } from '@models/index';
+import { Account, AccountRow, Month, User } from '@models/index';
 
 export const mutations = {
   createAccount: async (_, { name, ownerId }) => {
@@ -8,7 +8,6 @@ export const mutations = {
     }
     const a = new Account({ name: name, owners: [ownerId] });
     await a.save();
-    console.log(a.toObject());
     return a;
   },
   createAccountRow: async (_, { accountId, date, text, amount }) => {
@@ -19,11 +18,20 @@ export const mutations = {
       desc: text,
       amount: amount,
     });
-    ar.save();
+    await ar.save();
     return ar;
   },
   deleteAccountRow: async (_, { id }) => {
-    AccountRow.findByIdAndDelete(id);
-    return id;
+    const deletedRow = await AccountRow.findByIdAndDelete(id).exec();
+    return deletedRow ? deletedRow.id : null;
+  },
+  createMonth: async (_, { year, month, startDate }) => {
+    const d = new Month({
+      year: year,
+      month: month,
+      startDate: startDate,
+    });
+    await d.save();
+    return d;
   },
 };

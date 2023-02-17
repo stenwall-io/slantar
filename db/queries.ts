@@ -8,4 +8,6 @@ export const queries = {
     AccountRow.find({ account: accountId }).sort('-date text'),
   user: (_, { id }) => User.findById(id),
   users: () => User.find(),
+  month: (_, { id }) => Month.findById(id),
+  months: async () => Month.find().sort('startDate'),
 };
