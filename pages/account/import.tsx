@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Account } from '@models/index';
 import { IAccountRow } from '@models/index';
@@ -87,7 +87,7 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
 
   useEffect(() => {
     if (accountId && rowsText) {
-      let parsedRows = parseRows();
+      const parsedRows = parseRows();
       if (parsedRows) {
         findFriends(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
         setRows(parsedRows);
