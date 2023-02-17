@@ -1,32 +1,12 @@
-// import '../styles/styles.scss';
-import { ReactNode, useEffect } from 'react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
-import { request } from 'graphql-request';
 import LogOutButton from '@components/logoutbutton/logoutbutton';
 import useSWR from 'swr';
+import { fetcher } from 'util/graphQLFetcher';
 
-const fetcher = (query: string) => {
-  if (process.env.NODE_ENV === 'development') console.log('GRAPHQL QUERY:', query)
-  return request('/api/graphql', query)
-    .then((res) => {
-      if (res.errors) {
-        res.errors.forEach((err) => console.log('SERVER ERROR', err.message));
-      }
-      if (process.env.NODE_ENV === 'development') console.log('GRAPHQL RESPONSE:', res)
-      return res;
-    })
-    .catch((err) => {
-      if (err) {
-        err.response.errors.forEach((ierr) =>
-          console.log('SERVER ERROR:', ierr.message)
-        );
-      }
-    });
-};
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
