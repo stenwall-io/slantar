@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { request } from 'graphql-request';
+import { fetcher } from 'util/graphQLFetcher';
 
 export default function Account() {
   const router = useRouter();
@@ -10,7 +9,7 @@ export default function Account() {
     `{ account(id: "${accountId}"){ name } }`
   );
   const { data: accountRowData, mutate: accountRowMutate } = useSWR(
-    `{ accountRows(accountId:"${accountId}"){ id date text amount }}`
+    `{ accountRows(accountId:"${accountId}"){ id date text desc amount }}`
   );
 
   if (accountData) {
@@ -31,7 +30,11 @@ export default function Account() {
           <tbody>
             {accountRowData &&
               accountRowData.accountRows.map((row: any, i: number) => (
+                <AccountRow
+                  key={i}
                   row={row}
+                  accountRowMutate={accountRowMutate}
+                />
               ))}
           </tbody>
         </table>
@@ -40,12 +43,11 @@ export default function Account() {
   }
 }
 
-const AccountRow = ({ row, mutate }) => {
+const AccountRow = ({ row, accountRowMutate }) => {
   const deleteRow = () => {
-    request(
-      '/api/graphql',
-      `mutation{ deleteAccountRow(id: "${row.id}") }`
-    ).then(mutate());
+    fetcher(`mutation{ deleteAccountRow(id: "${row.id}") }`).then(
+      (id) => id && accountRowMutate()
+    );
   };
 
   return (
