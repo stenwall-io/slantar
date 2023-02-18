@@ -17,7 +17,7 @@ type Query {
 
 type Mutation {
     createAccount(name: String!, ownerId: ID!): Account!
-    createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!): AccountRow!
+    createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!, year: Int!, month: Int!): AccountRow!
     deleteAccountRow(id: ID!): ID
     createMonth(year: Int! month: Int startDate: Date!): Month
 }

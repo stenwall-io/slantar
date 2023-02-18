@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Account } from '@models/index';
 import { IAccountRow } from '@models/index';
-import { request } from 'graphql-request';
 import account from '@models/account';
+import { fetcher } from 'util/graphQLFetcher';
 
 export default function ImportAccountRows() {
   const [accountId, setAccountId] = useState(0);
@@ -87,7 +87,7 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
 
   useEffect(() => {
     if (accountId && rowsText) {
-      const parsedRows = parseRows();
+      const parsedRows = parseRows(rowsText);
       if (parsedRows) {
         findFriends(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
         setRows(parsedRows);
@@ -95,28 +95,40 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
     }
   }, [sent]);
 
-  const parseRows = () => {
-    const baseRows = rowsText.split('\n'); // Split into array of rows
-
-    const rows = baseRows
-      .map((row: string) => row.split('\t \t')) // Split each row into columns
-      .filter((splitRow: Array<string>) => {
-        // Filter away 'Prel' rows
-        if (!splitRow || splitRow.length != 5) return false;
-        return splitRow[1].charAt(0) == '2' && !splitRow[2].startsWith('Prel');
-      })
-      .map((splitRow: Array<string>) => {
-        // create array of "lightweight" AccoutRow objects
-        if (splitRow.length == 5) {
-          const accountRow = {
-            date: splitRow[1],
-            text: splitRow[2],
-            amount: parseFloat(splitRow[3].replace(',', '.').replace(' ', '')),
-          };
-          return accountRow;
+  const parseRows = (rowsText: string) => {
+    const splitRows = rowsText.split('\n'); // Split into array of rows
+    const columnRows = splitRows.map((row: string) => row.split('\t \t')); // Split each row into columns
+    const filteredRows = columnRows.filter((columnRow: Array<string>) => {
+      // Filter away 'Prel' rows
+      if (!columnRow || columnRow.length != 5) return false;
+      return columnRow[1].charAt(0) == '2' && !columnRow[2].startsWith('Prel');
+    });
+    const rowObjArr = filteredRows.map((rowColumn: Array<string>) => {
+      // create array of "lightweight" AccoutRow objects
+      if (rowColumn.length == 5) {
+        const dateColumn = new Date(rowColumn[1]);
+        let calcMonth = dateColumn.getMonth();
+        let calcYear = dateColumn.getFullYear();
+        if (dateColumn.getDate() >= 25) {
+          if (calcMonth == 11) {
+            calcMonth = 0;
+            calcYear += 1;
+          } else {
+            calcMonth += 1;
+          }
         }
-      });
-    return rows;
+        const rowObj = {
+          date: rowColumn[1],
+          text: rowColumn[2],
+          amount: parseFloat(rowColumn[3].replace(',', '.').replace(' ', '')),
+          year: calcYear, 
+          month: calcMonth ,
+        };
+
+        return rowObj;
+      }
+    });
+    return rowObjArr;
   };
 
   const findFriends = (parsedRows) => {
@@ -136,14 +148,16 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
   const saveRows = () => {
     const mutations = rows
       .filter((row) => row.save)
-      .map(
-        (row, i) =>
-          `m${i}: createAccountRow(accountId: "${accountId}" date:"${row.date.toString()}", text:"${
-            row.text
-          }", amount:${row.amount}){ id }`
-      );
+      .map((row, i) => {
+        console.log(row);
+        return `m${i}: createAccountRow(accountId: "${accountId}", date:"${row.date.toString()}", text:"${
+          row.text
+        }", amount:${row.amount}, year: ${row.year}, month: ${
+          row.month
+        }){ id }`;
+      });
     const mutationQuery = `mutation { ${mutations.join('\n')}}`;
-    request('/api/graphql', mutationQuery);
+    fetcher(mutationQuery);
   };
 
   return (

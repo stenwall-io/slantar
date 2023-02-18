@@ -6,19 +6,21 @@ export const mutations = {
     if (!u) {
       return null;
     }
-    const a = new Account({ name: name, owners: [ownerId] });
-    await a.save();
+    const a = await Account.create({ name: name, owners: [ownerId] });
     return a;
   },
-  createAccountRow: async (_, { accountId, date, text, amount }) => {
-    const ar = new AccountRow({
-      account: accountId,
-      date: date,
-      text: text,
-      desc: text,
-      amount: amount,
+  createAccountRow: async (_, args) => {
+    const monthArgs = {year: args.year, month: args.month};
+    const month = await Month.findOneAndUpdate(monthArgs, monthArgs, {upsert:true}).exec();
+    console.log(month)
+    const ar = await AccountRow.create({
+      account: args.accountId,
+      date: args.date,
+      text: args.text,
+      desc: args.text,
+      amount: args.amount,
+      month: month._id
     });
-    await ar.save();
     return ar;
   },
   deleteAccountRow: async (_, { id }) => {

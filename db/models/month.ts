@@ -5,7 +5,6 @@ export interface IMonth {
   id?: string;
   year: number;
   month: number;
-  startDate: Date;
   name?: string;
 }
 
@@ -34,10 +33,6 @@ const MonthSchema = new Schema<IMonth>({
     required: true,
     min: 0,
     max: 11,
-  },
-  startDate: {
-    type: Date,
-    required: true,
   },
 });
 

@@ -1,10 +1,11 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
-import { IAccount, ICategory } from '@models/index';
+import { IAccount, ICategory, IMonth } from '@models/index';
 
 export interface IAccountRow {
-  _id: Types.ObjectId;
-  id: string;
+  _id?: Types.ObjectId;
+  id?: string;
   account: PopulatedDoc<IAccount['_id'] & IAccount>;
+  month: PopulatedDoc<IMonth['_id'] & IMonth>;
   date: Date;
   text: string;
   desc: string;
@@ -21,6 +22,10 @@ const AccountRowSchema = new Schema<IAccountRow>({
   account: {
     type: Schema.Types.ObjectId,
     ref: 'Account',
+  },
+  month: {
+    type: Schema.Types.ObjectId,
+    ref: 'Month',
   },
   date: {
     type: Date,
