@@ -51,7 +51,7 @@ const AccountRow = ({ row, mutate }) => {
   return (
     <tr>
       <td>{new Date(row.date).toLocaleDateString('sv-SE')}</td>
-      <td>{row.text}</td>
+      <td title={row.text}>{row.desc}</td>
       <td>{row.amount}</td>
       <td>
         <button onClick={deleteRow}>X</button>
