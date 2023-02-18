@@ -9,7 +9,7 @@ export default function Account() {
   const { data: accountData } = useSWR(
     `{ account(id: "${accountId}"){ name } }`
   );
-  const { data: accountRowData, mutate } = useSWR(
+  const { data: accountRowData, mutate: accountRowMutate } = useSWR(
     `{ accountRows(accountId:"${accountId}"){ id date text amount }}`
   );
 
@@ -31,7 +31,7 @@ export default function Account() {
           <tbody>
             {accountRowData &&
               accountRowData.accountRows.map((row: any, i: number) => (
-                <AccountRow key={i} row={row} mutate={mutate} />
+                  row={row}
               ))}
           </tbody>
         </table>
