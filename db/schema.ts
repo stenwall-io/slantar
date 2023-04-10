@@ -1,7 +1,6 @@
 import { DateTypeDefinition, DateResolver } from 'graphql-scalars';
 import { queries } from 'db/queries';
 import { mutations } from 'db/mutations';
-import { Account, User } from '@models/index';
 
 export const typeDefs = `
 type Query {
@@ -19,7 +18,6 @@ type Mutation {
     createAccount(name: String!, ownerId: ID!): Account!
     createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!, year: Int!, month: Int!): AccountRow!
     deleteAccountRow(id: ID!): ID
-    createMonth(year: Int! month: Int startDate: Date!): Month
 }
 
 ${DateTypeDefinition}
@@ -52,6 +50,7 @@ type Month{
     month: Int!
     startDate: Date!
     name: String!
+    accountrows: [AccountRow]
 }
 
 type Category{
@@ -70,4 +69,5 @@ type User{
 export const resolvers = {
   Query: queries,
   Mutation: mutations,
+  Date: DateResolver
 };

@@ -1,4 +1,5 @@
-import { Schema, Model, model, models, Types } from 'mongoose';
+import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
+import { IAccountRow } from '@models/index';
 
 export interface IMonth {
   _id?: Types.ObjectId;
@@ -6,6 +7,7 @@ export interface IMonth {
   year: number;
   month: number;
   name?: string;
+  accountrows: Types.Array<PopulatedDoc<IAccountRow['_id'] & IAccountRow>>;
 }
 
 const monthNames = [
@@ -38,6 +40,22 @@ const MonthSchema = new Schema<IMonth>({
 
 MonthSchema.virtual('name').get(function () {
   return `${monthNames[this.month]} ${this.year}`;
+});
+
+MonthSchema.virtual('accountrows', {
+  ref: 'AccountRow',
+  localField: '_id',
+  foreignField: 'month',
+});
+
+MonthSchema.virtual('subrows', {
+  ref: 'SubRow',
+  localField: '_id',
+  foreignField: 'accountRow.month',
+});
+
+MonthSchema.post('find', function () {
+  this.populate('accountrows');
 });
 
 export default (models.Month as Model<IMonth>) ||

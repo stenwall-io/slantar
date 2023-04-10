@@ -12,7 +12,6 @@ export const mutations = {
   createAccountRow: async (_, args) => {
     const monthArgs = {year: args.year, month: args.month};
     const month = await Month.findOneAndUpdate(monthArgs, monthArgs, {upsert:true}).exec();
-    console.log(month)
     const ar = await AccountRow.create({
       account: args.accountId,
       date: args.date,
@@ -26,14 +25,5 @@ export const mutations = {
   deleteAccountRow: async (_, { id }) => {
     const deletedRow = await AccountRow.findByIdAndDelete(id).exec();
     return deletedRow ? deletedRow.id : null;
-  },
-  createMonth: async (_, { year, month, startDate }) => {
-    const d = new Month({
-      year: year,
-      month: month,
-      startDate: startDate,
-    });
-    await d.save();
-    return d;
-  },
+  }
 };
