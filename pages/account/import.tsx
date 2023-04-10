@@ -41,7 +41,7 @@ const ImportAccountRowsForm = ({
   setRowsText,
   setSent,
 }) => {
-  const accountRes = useSWR('{ accounts{ id name }}');
+  const { data:accountData } = useSWR('{ accounts{ id name }}');
   return (
     <>
       <div>
@@ -53,8 +53,8 @@ const ImportAccountRowsForm = ({
           <option key="" value="0">
             Välj konto
           </option>
-          {accountRes.data &&
-            accountRes.data.accounts.map(({ id, name }) => (
+          {accountData &&
+            accountData.accounts.map(({ id, name }) => (
               <option key={id} value={id}>
                 {name}
               </option>
@@ -149,7 +149,6 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
     const mutations = rows
       .filter((row) => row.save)
       .map((row, i) => {
-        console.log(row);
         return `m${i}: createAccountRow(accountId: "${accountId}", date:"${row.date.toString()}", text:"${
           row.text
         }", amount:${row.amount}, year: ${row.year}, month: ${
