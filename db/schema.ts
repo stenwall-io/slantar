@@ -37,7 +37,7 @@ type AccountRow{
     text: String!
     desc: String!
     amount: Float!
-    subrows: [SubRow!]!
+    subrows: [SubRow]
 }
 
 type SubRow{

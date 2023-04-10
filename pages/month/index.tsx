@@ -1,85 +1,61 @@
 import useSWR from 'swr';
 import { useState } from 'react';
-import { request } from 'graphql-request';
+import { IAccountRow, ISubRow, IMonth } from '@models/index';
 
 export default function Month() {
   const { data: monthsData, mutate: monthsMutate } = useSWR(
-    `{ months{ id name year month } }`
+    `{ months{ id name accountrows{ date desc text amount subrows { category { name } amount } } } }`
   );
-
-  // calculate year and month values for next month
-  const nextMonth = () => {
-    if (monthsData) {
-      const month = { year: 0, month: 0 };
-      month.year = monthsData.months.reduce(
-        (v, n) => Math.max(v, n.year || 0),
-        ''
-      );
-      month.month = monthsData.months
-        .filter((m) => m.year == month.year)
-        .reduce((v, n) => Math.max(v, n.month || 0), 0);
-
-      if (month.month >= 11) {
-        month.year += 1;
-        month.month = 0;
-      } else {
-        month.month += 1;
-      }
-      return month;
-    }
-  };
 
   return (
     <>
       <h1>Månader</h1>
-      <NewMonthForm nextMonth={nextMonth} monthsMutate={monthsMutate} />
+      {monthsData &&
+        monthsData.months.map((month: IMonth, i: number) => (
+          <>
+            <ShowMonth key={i} month={month} />
+          </>
+        ))}
     </>
   );
 }
 
-const NewMonthForm = ({ nextMonth, monthsMutate }) => {
-  const [show, setShow] = useState(false);
-  const [year, setYear] = useState(0);
-  const [month, setMonth] = useState(0);
-  const [startDate, setStartDate] = useState('yyyy-mm-dd');
+const ShowMonth = ({ month }) => {
+  const rowGroups = {};
+  console.log('mont accountrows', month.accountrows);
+  month.accountrows.forEach((accountRow) => {
+    if (!(accountRow.text in rowGroups)) {
+        rowGroups[accountRow.text] = {};
+        rowGroups[accountRow.text].sum = 0.0;
+        rowGroups[accountRow.text].rows = [];
+    }
+    rowGroups[accountRow.text].sum += accountRow.amount;
+    rowGroups[accountRow.text].rows.push(accountRow);
+  });
+  console.log('ROWGROUPS', rowGroups);
 
-  const createNewMonth = () => {
-    const nmo = nextMonth();
-    setYear(nmo.year);
-    setMonth(nmo.month);
-    setShow(true);
-  };
-
-  const saveMonth = () => {
-    request(
-      '/api/graphql',
-      `mutation{ createMonth(year:${year} month:${month} startDate:"${startDate}"){ id } }`
-    ).then(monthsMutate());
-  };
-
-  if (!show) {
-    return <button onClick={createNewMonth}>Ny månad</button>;
-  } else {
-    return (
-      <>
-        <input
-          type="text"
-          value={year}
-          onChange={(e) => setYear(parseInt(e.target.value, 10))}
-        />
-        <input
-          type="text"
-          value={month}
-          onChange={(e) => setMonth(parseInt(e.target.value, 10))}
-        />
-        <input
-          type="text"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <button onClick={saveMonth}>Spara</button>
-        <button onClick={() => setShow(false)}>Avbryt</button>
-      </>
-    );
-  }
+  return (
+    <>
+      <h2>{month.name}</h2>
+      <ul>
+        {Object.keys(rowGroups).sort((key_a, key_b) => rowGroups[key_b].sum - rowGroups[key_a].sum).map((key) => (
+          <li>
+            {key}: {rowGroups[key].sum} {rowGroups[key].rows.length} rader
+          </li>
+        ))}
+      </ul>
+      <ul>
+        {month.accountrows.map((accountRow: IAccountRow) => (
+          <li>
+            {accountRow.date} <b>{accountRow.desc}</b> <i>{accountRow.text}</i>
+            <ul>
+              {accountRow.subrows && accountRow.subrows.map((subRow: ISubRow) => (
+                <li>{subRow.amount}</li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 };

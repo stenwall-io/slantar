@@ -1,5 +1,5 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
-import { IAccount, ICategory, IMonth } from '@models/index';
+import { SubRow, ISubRow, IAccount, IMonth } from '@models/index';
 
 export interface IAccountRow {
   _id?: Types.ObjectId;
@@ -10,12 +10,7 @@ export interface IAccountRow {
   text: string;
   desc: string;
   amount: number;
-  subrows: Array<ISubRow>;
-}
-
-interface ISubRow {
-  category: PopulatedDoc<ICategory['_id'] & ICategory>;
-  amount: number;
+  subrows: [Array<PopulatedDoc<ISubRow['_id'] & ISubRow>>]
 }
 
 const AccountRowSchema = new Schema<IAccountRow>({
@@ -49,6 +44,22 @@ const AccountRowSchema = new Schema<IAccountRow>({
     trim: true,
     default: 0.0
   },
+});
+
+AccountRowSchema.pre('save', async function() {
+  if (this.isNew) {
+    SubRow.create({accountRow: this.id, amount: this.amount})
+  }
+});
+
+AccountRowSchema.post('find', function() {
+  this.populate('subrows');
+});
+
+AccountRowSchema.virtual('subrows', {
+  ref: 'SubRow',
+  localField: '_id',
+  foreignField: 'accountRow'
 });
 
 export default (models.AccountRow as Model<IAccountRow>) ||
