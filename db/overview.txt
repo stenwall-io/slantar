@@ -1,5 +1,4 @@
 AccountRow
-- type (inkomst, utgift, överföring/sparas)
 - date
 - text
 - amount
