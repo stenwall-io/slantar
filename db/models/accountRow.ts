@@ -6,10 +6,15 @@ export interface IAccountRow {
   id?: string;
   account: PopulatedDoc<IAccount['_id'] & IAccount>;
   month: PopulatedDoc<IMonth['_id'] & IMonth>;
+  monthf: string;
   date: Date;
+  datef: string;
+  savings: boolean;
+  extra: boolean;
   text: string;
   desc: string;
   amount: number;
+  amountf: string;
   subrows: [Array<PopulatedDoc<ISubRow['_id'] & ISubRow>>]
 }
 
@@ -25,6 +30,16 @@ const AccountRowSchema = new Schema<IAccountRow>({
   date: {
     type: Date,
     required: true,
+  },
+  savings: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  extra: {
+    type: Boolean,
+    required: true,
+    default: false
   },
   text: {
     type: String,
@@ -44,6 +59,11 @@ const AccountRowSchema = new Schema<IAccountRow>({
     trim: true,
     default: 0.0
   },
+},
+{
+  toObject: {
+    virtuals: true
+  },
 });
 
 AccountRowSchema.pre('save', async function() {
@@ -60,6 +80,14 @@ AccountRowSchema.virtual('subrows', {
   ref: 'SubRow',
   localField: '_id',
   foreignField: 'accountRow'
+});
+
+AccountRowSchema.virtual('amountf').get(function() {
+  return this.amount.toLocaleString('sv-SE', { minimumFractionDigits: 2 });
+});
+
+AccountRowSchema.virtual('datef').get(function() {
+  return new Date(this.date).toLocaleDateString('sv-SE');
 });
 
 export default (models.AccountRow as Model<IAccountRow>) ||

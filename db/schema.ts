@@ -32,9 +32,11 @@ type AccountRow{
     id: String
     account: Account!
     date: Date!
+    datef: String
     text: String!
     desc: String!
     amount: Float!
+    amountf: String
     subrows: [SubRow]
 }
 
