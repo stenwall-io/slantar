@@ -7,11 +7,23 @@ import account from '@models/account';
 import { fetcher } from 'util/graphQLFetcher';
 
 export default function ImportAccountRows() {
+  // ID of the account to import to
   const [accountId, setAccountId] = useState(0);
-  const [sent, setSent] = useState(false);
+  // is the text parsed?
+  const [parsed, setSent] = useState(false);
+  // the text to parse
   const [rowsText, setRowsText] = useState('');
 
-  if (!sent) {
+  // fetch account rows when the ID is set
+  // needs to be here so that the data can load on select
+  const accountRowData = useSWR(
+    accountId
+      ? `{ accountRows(accountId:"${accountId}"){ date text amount }}`
+      : null
+  );
+
+  if (!parsed) {
+    // show the form to enter text
     return (
       <ImportAccountRowsForm
         accountId={accountId}
@@ -22,11 +34,12 @@ export default function ImportAccountRows() {
       />
     );
   } else {
-    // show after form is sent
+    // show result of parsing before saving to DB
     return (
       <ImportAccountRowsTable
-        sent={sent}
+        sent={parsed}
         accountId={accountId}
+        accountRowData={accountRowData}
         rowsText={rowsText}
         setSent={setSent}
       />
@@ -34,6 +47,8 @@ export default function ImportAccountRows() {
   }
 }
 
+
+// A form with a selectbox for accounts and a textfield for account rows text to parse
 const ImportAccountRowsForm = ({
   accountId,
   setAccountId,
@@ -41,7 +56,9 @@ const ImportAccountRowsForm = ({
   setRowsText,
   setSent,
 }) => {
+  
   const { data:accountData } = useSWR('{ accounts{ id name }}');
+  
   return (
     <>
       <div>
@@ -74,22 +91,19 @@ const ImportAccountRowsForm = ({
   );
 };
 
-const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
+// An table to select rows to import
+const ImportAccountRowsTable = ({ sent, accountId, accountRowData, rowsText, setSent }) => {
   const [rows, setRows] = useState([]);
-
-  const accountRowRes = useSWR(
-    accountId
-      ? `{ accountRows(accountId:"${accountId}"){ date text amount }}`
-      : null
-  );
-
-  const accountRows = accountRowRes.data ? accountRowRes.data.accountRows : [];
+  
+  // fetch the content of data if it's there
+  const accountRows = accountRowData.data ? accountRowData.data.accountRows : [];
 
   useEffect(() => {
-    if (accountId && rowsText) {
+    if (accountRowData.data && rowsText) {
+      // parse the account rows text
       const parsedRows = parseRows(rowsText);
       if (parsedRows) {
-        findFriends(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
+        findMatchingRows(parsedRows).sort((a, b) => b.date.localeCompare(a.date));
         setRows(parsedRows);
       }
     }
@@ -109,6 +123,7 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
         const dateColumn = new Date(rowColumn[1]);
         let calcMonth = dateColumn.getMonth();
         let calcYear = dateColumn.getFullYear();
+        // adjust to next month/year if after 25th
         if (dateColumn.getDate() >= 25) {
           if (calcMonth == 11) {
             calcMonth = 0;
@@ -117,6 +132,7 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
             calcMonth += 1;
           }
         }
+        // create lightweight object
         const rowObj = {
           date: rowColumn[1],
           text: rowColumn[2],
@@ -131,17 +147,17 @@ const ImportAccountRowsTable = ({ sent, accountId, rowsText, setSent }) => {
     return rowObjArr;
   };
 
-  const findFriends = (parsedRows) => {
-    // find row "friends" already in account
+  const findMatchingRows = (parsedRows) => {
+    // find matching rows already in account
     return parsedRows.map((row) => {
-      row.friends = accountRows
+      row.matching = accountRows
         .filter(
           (ar) => new Date(ar.date).toLocaleDateString('sv-SE') === row.date
         )
         .filter((ar) => ar.text === row.text)
         .filter((ar) => ar.amount === row.amount);
-      row.save = row.friends.length == 0;
-      row.duplicate = row.friends.length > 1;
+      row.save = row.matching.length == 0;
+      row.duplicate = row.matching.length > 1;
     });
   };
 
@@ -203,7 +219,7 @@ const ImportAccountRowsRow = ({ row }) => {
     setSymbol(statusSymbol());
   };
 
-  if (row.friends.length <= 1) {
+  if (row.matching.length <= 1) {
     return (
       <tr>
         <td>{row.date}</td>
@@ -215,11 +231,11 @@ const ImportAccountRowsRow = ({ row }) => {
             {symbol}
           </button>
         </td>
-        {row.friends.length == 1 && (
+        {row.matching.length == 1 && (
           <>
-            <td>{new Date(row.friends[0].date).toLocaleDateString('sv-SE')}</td>
-            <td>{row.friends[0].text}</td>
-            <td>{row.friends[0].amount}</td>
+            <td>{new Date(row.matching[0].date).toLocaleDateString('sv-SE')}</td>
+            <td>{row.matching[0].text}</td>
+            <td>{row.matching[0].amount}</td>
           </>
         )}
       </tr>
@@ -237,11 +253,11 @@ const ImportAccountRowsRow = ({ row }) => {
               {symbol}
             </button>
           </td>
-          <td>{new Date(row.friends[0].date).toLocaleDateString('sv-SE')}</td>
-          <td>{row.friends[0].text}</td>
-          <td>{row.friends[0].amount}</td>
+          <td>{new Date(row.matching[0].date).toLocaleDateString('sv-SE')}</td>
+          <td>{row.matching[0].text}</td>
+          <td>{row.matching[0].amount}</td>
         </tr>
-        {row.friends.map((f) => (
+        {row.matching.map((f) => (
           <tr>
             <td colSpan={4}></td>
             <td>{new Date(f.date).toLocaleDateString('sv-SE')}</td>
