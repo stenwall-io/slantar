@@ -10,6 +10,10 @@ export const queries = {
       .sort('-date text'),
   user: (_, { id }) => User.findById(id),
   users: () => User.find(),
-  month: (_, { id }) => Month.findById(id),
-  months: async () => Month.find().populate('accountrows').sort('year month'),
+  month: (_, { id }) =>
+    Month.findById(id).populate({path: 'accountrows', options: { sort: { date: -1 } } }),
+  months: async () =>
+    Month.find()
+      .populate({path: 'accountrows', options: { sort: { date: -1 } } } )
+      .sort('year month'),
 };

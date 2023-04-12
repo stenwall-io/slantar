@@ -36,7 +36,8 @@ const MonthSchema = new Schema<IMonth>({
     min: 0,
     max: 11,
   },
-});
+}
+);
 
 MonthSchema.virtual('name').get(function () {
   return `${monthNames[this.month]} ${this.year}`;
