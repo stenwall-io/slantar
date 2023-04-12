@@ -5,6 +5,7 @@ import { Account } from '@models/index';
 import { IAccountRow } from '@models/index';
 import account from '@models/account';
 import { fetcher } from 'util/graphQLFetcher';
+import AccountSelector from '@components/selectors/accountselector';
 
 export default function ImportAccountRows() {
   // ID of the account to import to
@@ -61,23 +62,7 @@ const ImportAccountRowsForm = ({
   
   return (
     <>
-      <div>
-        <select
-          name="accounts"
-          value={accountId}
-          onChange={(e) => setAccountId(e.target.value)}
-        >
-          <option key="" value="0">
-            Välj konto
-          </option>
-          {accountData &&
-            accountData.accounts.map(({ id, name }) => (
-              <option key={id} value={id}>
-                {name}
-              </option>
-            ))}
-        </select>
-      </div>
+      <AccountSelector accountId={accountId} setAccountId={setAccountId}/>
       <div>
         <textarea
           value={rowsText}
