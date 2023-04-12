@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { useState } from 'react';
+import Link from 'next/link';
 import { IAccountRow, ISubRow, IMonth } from '@models/index';
 
 export default function Month() {
@@ -10,52 +10,86 @@ export default function Month() {
   return (
     <>
       <h1>Månader</h1>
-      {monthsData &&
-        monthsData.months.map((month: IMonth, i: number) => (
-          <>
-            <ShowMonth key={i} month={month} />
-          </>
-        ))}
+      <table>
+        <thead>
+          <tr>
+            <th>Månad</th>
+            <th>In</th>
+            <th>Ut</th>
+            <th>Diff</th>
+            <th>Sparas</th>
+            <th>Extra</th>
+          </tr>
+        </thead>
+        <tbody>
+          {monthsData &&
+            monthsData.months.map((month: IMonth, i: number) => (
+              <>
+                <MonthTableRow key={i} month={month} />
+              </>
+            ))}
+        </tbody>
+      </table>
     </>
   );
 }
 
-const ShowMonth = ({ month }) => {
-  const rowGroups = {};
+const MonthTableRow = ({ month }) => {
+  const rowGroups = {
+    in: [],
+    out: [],
+    savings: [],
+    extra: [],
+  };
+  function groupSum(name) {
+    return rowGroups[name].reduce((tot, v) => tot + v.amount, 0);
+  }
+  function groupSumF(name) {
+    return rowGroups[name]
+      .reduce((tot, v) => tot + v.amount, 0)
+      .toLocaleString('sv-SE', { minimumFractionDigits: 2 });
+  }
+
   console.log('mont accountrows', month.accountrows);
   month.accountrows.forEach((accountRow) => {
-    if (!(accountRow.text in rowGroups)) {
-        rowGroups[accountRow.text] = {};
-        rowGroups[accountRow.text].sum = 0.0;
-        rowGroups[accountRow.text].rows = [];
+    if (accountRow.savings) {
+      rowGroups.savings.push(accountRow);
+    } else {
+      if (accountRow.amount > 0) {
+        rowGroups.in.push(accountRow);
+      } else {
+        rowGroups.out.push(accountRow);
+      }
     }
-    rowGroups[accountRow.text].sum += accountRow.amount;
-    rowGroups[accountRow.text].rows.push(accountRow);
+    if (accountRow.extra) {
+      rowGroups.extra.push(accountRow);
+    }
   });
   console.log('ROWGROUPS', rowGroups);
 
   return (
     <>
-      <h2>{month.name}</h2>
-      <ul>
-        {Object.keys(rowGroups).sort((key_a, key_b) => rowGroups[key_b].sum - rowGroups[key_a].sum).map((key) => (
-          <li>
-            {key}: {rowGroups[key].sum} {rowGroups[key].rows.length} rader
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {month.accountrows.map((accountRow: IAccountRow) => (
-          <li>
-            {accountRow.date} <b>{accountRow.desc}</b> <i>{accountRow.text}</i>
-            <ul>
-              {accountRow.subrows && accountRow.subrows.map((subRow: ISubRow) => (
-                <li>{subRow.amount}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      <tr>
+        <td>
+          <Link
+            href={{
+              pathname: '/month/[monthId]',
+              query: { monthId: month.id },
+            }}
+          >
+            {month.name}
+          </Link>
+        </td>
+        <td>{groupSumF('in')}</td>
+        <td>{groupSumF('out')}</td>
+        <td>
+          {(groupSum('in') - groupSum('out')).toLocaleString('sv-SE', {
+            minimumFractionDigits: 2,
+          })}
+        </td>
+        <td>{groupSumF('savings')}</td>
+        <td>{groupSumF('extra')}</td>
+      </tr>
     </>
   );
 };
