@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { Account } from '@models/index';
 import { IAccountRow } from '@models/index';
 import account from '@models/account';
-import { fetcher } from 'util/graphQLFetcher';
+import ImportAccountRowsTable from '@components/importaccountrows/importaccountrowstable';
 import AccountSelector from '@components/selectors/accountselector';
 
 export default function ImportAccountRows() {
