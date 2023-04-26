@@ -3,17 +3,17 @@ import { Schema, Model, model, models, Types } from 'mongoose';
 export interface ICategory {
   _id?: Types.ObjectId;
   id?: string;
-  name: string;
   group: string;
+  subgroup: string;
 }
 
 const CategorySchema = new Schema<ICategory>({
-  name: {
+  group: {
     type: String,
     required: true,
     trim: true,
   },
-  group: {
+  subgroup: {
     type: String,
     required: true,
     trim: true,
