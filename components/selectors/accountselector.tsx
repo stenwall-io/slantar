@@ -1,7 +1,8 @@
 import useSWR from 'swr';
 
 export default function AccountSelector({ accountId, setAccountId }) {
-  const { data: accountData } = useSWR('{ accounts{ id name }}');
+  const { data: accountData } = useSWR('{ accounts{ id name } }');
+  console.log('AccountSelector', accountId)
   return (
     <>
       <div>
@@ -10,7 +11,7 @@ export default function AccountSelector({ accountId, setAccountId }) {
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
         >
-          <option key="" value="0">
+          <option key="0" value="">
             Välj konto
           </option>
           {accountData &&
