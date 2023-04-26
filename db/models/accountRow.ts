@@ -1,7 +1,7 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 import { SubRow, ISubRow, IAccount, IMonth } from '@models/index';
 
-export interface IAccountRow {
+export type IAccountRow = {
   _id?: Types.ObjectId;
   id?: string;
   account: PopulatedDoc<IAccount['_id'] & IAccount>;
@@ -10,12 +10,11 @@ export interface IAccountRow {
   date: Date;
   datef: string;
   savings: boolean;
-  extra: boolean;
   text: string;
   desc: string;
   amount: number;
   amountf: string;
-  subrows: [Array<PopulatedDoc<ISubRow['_id'] & ISubRow>>]
+  subrows: [PopulatedDoc<ISubRow['_id'] & ISubRow>[]]
 }
 
 const AccountRowSchema = new Schema<IAccountRow>({
@@ -35,12 +34,7 @@ const AccountRowSchema = new Schema<IAccountRow>({
     type: Boolean,
     required: true,
     default: false
-  },
-  extra: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
+  },  
   text: {
     type: String,
     required: true,

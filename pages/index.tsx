@@ -1,4 +1,3 @@
-import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 
 export default function Index() {
