@@ -1,0 +1,41 @@
+Account
+// A model describing a bank account
+- name string  // the name of the account
+- owners [ref User]  // users allowed acces to the account
+
+AccountRow
+// A row in an account statement (kontouttdrag)
+- account ref Account  // the account for the row
+- month ref Month  // the row belongs to this month
+- date Date  // the date from the statement
+- datef virtual string  // locale formatted date
+- savings boolean  // is this a transaction to or from a savings account?
+- text string  // the original text on the statement
+- desc string  // a better description for the row
+- amount number  // the amount on the statement
+- amountf virtual string  // a locale formatted string with 2 trailing zeroes
+- subrows [ref SubRow]  // the subrows for this statement row
+
+Category
+// a two level category for organizing SubRows
+- group string  // the first level group
+- subgroup string  // the second level group
+
+Month
+// the "month" between when you get your lön
+- year number  // a month in what year
+- month number  // what month is this (january = 0)
+- name virtual string  // the month as text
+- accountrows [ref AccountRow]  // the account rows belonging to this month
+
+SubRow
+- accountRow ref AccountRoww  // what account row is this a sub row of
+- category? ref Category  // what category is this subrows
+- extra boolean  // is this spending something extraordinary?
+- amount number  // this subrows part of the total amount for the AccountRow
+- amountf virtual string  // locale formatted amount with 2 trailing zeroes
+
+User
+- username string
+- password string
+- name string  // real name of user
