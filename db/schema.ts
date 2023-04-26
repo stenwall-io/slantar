@@ -1,8 +1,9 @@
 import { DateTypeDefinition, DateResolver } from 'graphql-scalars';
 import { queries } from 'db/queries';
 import { mutations } from 'db/mutations';
+import { gql } from 'graphql-request';
 
-export const typeDefs = `
+export const typeDefs = gql`
 type Query {
     info: String
     account(id: ID): Account
@@ -12,12 +13,17 @@ type Query {
     users: [User]
     month(id: ID): Month
     months: [Month]
+    categories: [Category]
 }
 
 type Mutation {
     createAccount(name: String!, ownerId: ID!): Account!
     createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!, year: Int!, month: Int!): AccountRow!
+    updateAccountRow(accountRowId: ID!, monthId: ID!, desc:String!, savings:Boolean!): AccountRow
     deleteAccountRow(id: ID!): ID
+    setAccountRowMonth(accountRowId: ID!, monthId: ID!): AccountRow
+    createSubRow(accountRowId: ID!, amount: Float!): SubRow
+    updateSubRow(subRowId: ID!, categoryId: ID!, extra: Boolean!, amount: Float!): SubRow
 }
 
 ${DateTypeDefinition}
@@ -31,8 +37,10 @@ type Account{
 type AccountRow{
     id: String
     account: Account!
+    month: Month!
     date: Date!
     datef: String
+    savings: Boolean!
     text: String!
     desc: String!
     amount: Float!
@@ -42,23 +50,24 @@ type AccountRow{
 
 type SubRow{
     id: String
-    amount: Float!
     category: Category
+    extra: Boolean!
+    amount: Float!
+    amountf: String!
 }
 
 type Month{
     id: String
     year: Int!
     month: Int!
-    startDate: Date!
     name: String!
     accountrows: [AccountRow]
 }
 
 type Category{
     id: String
-    name: String!
     group: String!
+    subgroup: String!
 }
 
 type User{
@@ -67,6 +76,8 @@ type User{
     username: String!
 }  
 `;
+
+export const schema = typeDefs;
 
 export const resolvers = {
   Query: queries,
