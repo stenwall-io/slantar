@@ -4,16 +4,26 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "eslint-plugin-react"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "next",
     "prettier"
   ],
-  // "rules": {
-  //   "@typescript-eslint/no-unused-vars": "error",
-  //   "@typescript-eslint/consistent-type-definitions": ["error", "type"]
-  // },
+  "ignorePatterns": ["gql.ts"],  // ignore all the errors in the generated GraphQL types
+  "rules": {
+    // 1: Turn off rules that are no longer necessary in React 17 and in Next.js
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    // 2: We do not need to use prop types with TypeScript
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"]
+  },
   "env": {
     "browser": true,
     "es2021": true
