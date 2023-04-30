@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import { EditableAccountRow, EditableSubRow} from 'types/editables';
-import EditAccountRow from '@components/editaccountrow';
+import EditAccountRow from '@components/editaccountrows/editaccountrow';
 import { fetcher } from 'util/graphQLFetcher';
 
 type Props = {

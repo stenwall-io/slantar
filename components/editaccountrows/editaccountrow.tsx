@@ -1,7 +1,7 @@
 import { useState, ReactElement } from 'react';
-import MonthSelector from './selectors/monthselector';
+import MonthSelector from '@components/selectors/monthselector';
 import { ChangeEvent } from 'react';
-import EditSubRow from '@components/editsubrow';
+import EditSubRow from '@components/editaccountrows/editsubrow';
 import { EditableAccountRow, EditableSubRow } from 'types/editables';
 
 type Props = {
