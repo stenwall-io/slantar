@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { ImportAccountRow } from 'types/importaccountrow';
-import ImportAccountRowsRow from './importaccountrowsrow';
+import ImportAccountRowsRow from 'components/importaccountrows/importaccountrowsrow';
 import { AccountRow } from 'types/gql';
 import { GraphQLMutation } from 'hooks/useGraphQL';
 

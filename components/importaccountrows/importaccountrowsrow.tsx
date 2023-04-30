@@ -1,4 +1,5 @@
 import { ReactElement, useState } from "react";
+import { AccountRow } from "types/gql";
 import { ImportAccountRow } from "types/importaccountrow";
 
 type Props = {
@@ -57,7 +58,7 @@ export default function ImportAccountRowsRow({ row }: Props): ReactElement{
             <td>{row.matching[0].text}</td>
             <td>{row.matching[0].amount}</td>
           </tr>
-          {row.matching.map((f: ImportAccountRow, i:number) => (
+          {row.matching.map((f: AccountRow, i:number) => (
             <tr key={i}>
               <td colSpan={4}></td>
               <td>{new Date(f.date).toLocaleDateString('sv-SE')}</td>
