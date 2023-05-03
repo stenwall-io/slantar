@@ -1,9 +1,10 @@
-import { HasAmount } from 'types/hasamount';
+import { SubRow } from 'types/gql';
 
 export type MonthBuckets = {
-  in: HasAmount[];
-  out: HasAmount[];
-  savings_in: HasAmount[];
-  savings_out: HasAmount[];
-  extra: HasAmount[];
+  in: SubRow[];
+  out: SubRow[];
+  savings_in: SubRow[];
+  savings_out: SubRow[];
+  savings: SubRow[];
+  extra: SubRow[];
 };
