@@ -49,16 +49,14 @@ export const mutations = {
     return subRow;
   },
   updateSubRow: async (_:unknown, { subRowId, categoryId, extra, amount }:MutationUpdateSubRowArgs) => {
-    console.log('Updating ', subRowId);
     const subRow = await SubRow.findOneAndUpdate(
       { _id: subRowId },
       {
-        category: categoryId ? categoryId : null,
+        category: categoryId?categoryId:null,
         extra: extra,
         amount: amount,
       }
     ).exec();
-    console.log(subRow);
     return subRow;
   },
 };

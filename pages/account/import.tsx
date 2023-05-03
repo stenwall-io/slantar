@@ -1,8 +1,5 @@
-// import useSWR from 'swr';
 import { useState } from 'react';
 import ImportAccountRowsForm from '@components/importaccountrows/importaccountrowsform';
-// import ImportAccountRowsTable from '@components/importaccountrows/importaccountrowstable';
-// import { AccountRow, Query } from 'types/gql';
 import { GraphQLQuery } from 'hooks/useGraphQL';
 import ImportAccountRowsTable from '@components/importaccountrows/importaccountrowstable';
 import { gql } from 'graphql-request';
@@ -17,11 +14,6 @@ export default function ImportAccountRows() {
 
   // fetch account rows when the ID is set
   // needs to be here so that the data can load on select
-  // const { data } = useSWR<AccountRow[], Error>(
-  //   accountId
-  //     ? `{ accountRows(accountId:"${accountId}"){ date text amount }}`
-  //     : null
-  // );
   const { data } = GraphQLQuery(
     accountId
       ? gql`{
@@ -32,10 +24,6 @@ export default function ImportAccountRows() {
         }}`
       : null
   );
-
-  if (data) {
-    console.log('data in import.tsx: ', data);
-  }
 
   if (!parsed) {
     // show the form to enter text
@@ -55,9 +43,7 @@ export default function ImportAccountRows() {
     // show result of parsing before saving to DB
     // fetch the content of data if it's there
     const accountRows = data ? data.accountRows : [];
-    console.log('accountRows', accountRows);
-    // const accountRows = data ? data : [];
-
+  
     return (
       <ImportAccountRowsTable
         accountId={accountId}

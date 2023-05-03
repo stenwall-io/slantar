@@ -1,9 +1,9 @@
 import request from 'graphql-request';
 import useSWR, { Fetcher, SWRResponse } from 'swr';
-import { Mutation, Query } from 'types/gql';
+import { Query } from 'types/gql';
 
 // TODO: test error handling
-const fetcherFunc = async (query: string) => {
+export const fetcherFunc = async (query: string) => {
   if (process.env.NODE_ENV === 'development')
     console.log('GRAPHQL QUERY:', query);
 
@@ -32,8 +32,3 @@ export function GraphQLQuery(query: string): SWRResponse<Query, Error> {
   const fetcher: Fetcher<Query, string> = fetcherFunc;
   return useSWR<Query, Error>(query, fetcher);
 }
-
-export function GraphQLMutation(query: string): SWRResponse<Mutation, Error> {
-    const fetcher: Fetcher<Mutation, string> = fetcherFunc;
-    return useSWR<Mutation, Error>(query, fetcher);
-  }

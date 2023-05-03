@@ -1,7 +1,7 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 import { IAccountRow } from '@models/index';
 
-export interface IMonth {
+export type IMonth = {
   _id?: Types.ObjectId;
   id?: string;
   year: number;

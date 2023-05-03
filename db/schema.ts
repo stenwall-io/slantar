@@ -4,7 +4,7 @@ import { mutations } from 'db/mutations';
 import { gql } from 'graphql-request';
 
 export const typeDefs = gql`
-type Query {
+  type Query {
     info: String
     account(id: ID): Account
     accounts: [Account]
@@ -14,27 +14,44 @@ type Query {
     month(id: ID): Month
     months: [Month]
     categories: [Category]
-}
+  }
 
-type Mutation {
+  type Mutation {
     createAccount(name: String!, ownerId: ID!): Account!
-    createAccountRow(accountId: ID!, date: Date!, text: String!, amount:Float!, year: Int!, month: Int!): AccountRow!
-    updateAccountRow(accountRowId: ID!, monthId: ID!, desc:String!, savings:Boolean!): AccountRow
+    createAccountRow(
+      accountId: ID!
+      date: Date!
+      text: String!
+      amount: Float!
+      year: Int!
+      month: Int!
+    ): AccountRow!
+    updateAccountRow(
+      accountRowId: ID!
+      monthId: ID!
+      desc: String!
+      savings: Boolean!
+    ): AccountRow
     deleteAccountRow(id: ID!): ID
     setAccountRowMonth(accountRowId: ID!, monthId: ID!): AccountRow
     createSubRow(accountRowId: ID!, amount: Float!): SubRow
-    updateSubRow(subRowId: ID!, categoryId: ID!, extra: Boolean!, amount: Float!): SubRow
-}
+    updateSubRow(
+      subRowId: ID!
+      categoryId: ID!
+      extra: Boolean!
+      amount: Float!
+    ): SubRow
+  }
 
-${DateTypeDefinition}
+  ${DateTypeDefinition}
 
-type Account{
+  type Account {
     id: String
     name: String!
     owners: [User!]!
-}
+  }
 
-type AccountRow{
+  type AccountRow {
     id: String
     account: Account!
     month: Month!
@@ -46,35 +63,36 @@ type AccountRow{
     amount: Float!
     amountf: String
     subrows: [SubRow]
-}
+  }
 
-type SubRow{
+  type SubRow {
     id: String
+    accountRow: AccountRow
     category: Category
     extra: Boolean!
     amount: Float!
     amountf: String!
-}
+  }
 
-type Month{
+  type Month {
     id: String
     year: Int!
     month: Int!
     name: String!
     accountrows: [AccountRow]
-}
+  }
 
-type Category{
+  type Category {
     id: String
     group: String!
     subgroup: String!
-}
+  }
 
-type User{
+  type User {
     id: String!
     name: String!
     username: String!
-}  
+  }
 `;
 
 export const schema = typeDefs;
@@ -82,5 +100,5 @@ export const schema = typeDefs;
 export const resolvers = {
   Query: queries,
   Mutation: mutations,
-  Date: DateResolver
+  Date: DateResolver,
 };
