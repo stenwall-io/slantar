@@ -23,7 +23,7 @@ export default function ImportAccountRowsRow({ row }: Props): ReactElement{
         <tr>
           <td>{row.date}</td>
           <td>{row.text}</td>
-          <td>{row.amount}</td>
+          <td className="amount">{row.amount}</td>
           <td>
             <button onClick={toggleSave}>
               {row.duplicate ? '! ' : ''}
@@ -47,7 +47,7 @@ export default function ImportAccountRowsRow({ row }: Props): ReactElement{
           <tr>
             <td>{row.date}</td>
             <td>{row.text}</td>
-            <td>{row.amount}</td>
+            <td className="amount">{row.amount}</td>
             <td>
               <button onClick={toggleSave}>
                 {row.duplicate ? '! ' : ''}
@@ -56,14 +56,14 @@ export default function ImportAccountRowsRow({ row }: Props): ReactElement{
             </td>
             <td>{new Date(row.matching[0].date).toLocaleDateString('sv-SE')}</td>
             <td>{row.matching[0].text}</td>
-            <td>{row.matching[0].amount}</td>
+            <td className="amount">{row.matching[0].amount}</td>
           </tr>
           {row.matching.map((f: AccountRow, i:number) => (
             <tr key={i}>
               <td colSpan={4}></td>
               <td>{new Date(f.date).toLocaleDateString('sv-SE')}</td>
               <td>{f.text}</td>
-              <td>{f.amount}</td>
+              <td className="amount">{f.amount}</td>
             </tr>
           ))}
         </>
