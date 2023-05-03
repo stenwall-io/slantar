@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 import LogOutButton from '@components/logoutbutton/logoutbutton';
-import useSWR from 'swr';
 import { fetcher } from 'util/graphQLFetcher';
 import { Account } from 'types/gql';
 import { GraphQLQuery } from 'hooks/useGraphQL';
+import 'styles/globals.css'
 
 const MyApp = ({
   Component,
