@@ -1,8 +1,13 @@
-import useSWR from 'swr';
+import { GraphQLQuery } from 'hooks/useGraphQL';
+import { ReactElement } from 'react';
 
-export default function AccountSelector({ accountId, setAccountId }) {
-  const { data: accountData } = useSWR('{ accounts{ id name } }');
-  console.log('AccountSelector', accountId)
+type Props = {
+  accountId: string;
+  setAccountId: (arg: string) => void;
+};
+
+export default function AccountSelector({ accountId, setAccountId }: Props):ReactElement {
+  const { data: accountData } = GraphQLQuery('{ accounts{ id name } }');
   return (
     <>
       <div>
@@ -11,7 +16,7 @@ export default function AccountSelector({ accountId, setAccountId }) {
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
         >
-          <option key="0" value="">
+          <option value="">
             Välj konto
           </option>
           {accountData &&
