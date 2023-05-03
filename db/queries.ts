@@ -19,16 +19,16 @@ export const queries = {
   month: (_: unknown, { id }: QueryMonthArgs) =>
     Month.findById(id).populate({
       path: 'accountrows',
-      populate: { path: 'month subrows' },
+      populate: [{ path: 'subrows', populate: [{ path: 'category' }, { path: 'accountRow' }]}, { path: 'month'}],
       options: { sort: { date: -1 } },
     }),
   months: async () =>
     Month.find()
-      .populate({
-        path: 'accountrows',
-        populate: { path: 'month' },
-        options: { sort: { date: -1 } },
-      })
+    .populate({
+      path: 'accountrows',
+      populate: [{ path: 'subrows', populate: [{ path: 'category' }, { path: 'accountRow' }]}, { path: 'month'}],
+      options: { sort: { date: -1 } },
+    })
       .sort('year month'),
   categories: () => Category.find(),
 };
