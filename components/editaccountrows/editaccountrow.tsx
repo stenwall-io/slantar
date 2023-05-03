@@ -12,11 +12,15 @@ export default function EditAccountRow({ accountRow }: Props): ReactElement {
   const [monthState, setMonthState] = useState(accountRow.month.id as string);
   const [savingsState, setSavingsState] = useState(accountRow.savings);
 
-  const markRowEdited = () => (accountRow.edited = true);
+  const markRowEdited = () => {
+    accountRow.edited = true;
+    console.log(accountRow);
+  };
 
   function setMonth(monthId: string) {
     setMonthState(monthId);
     accountRow.newMonthId = monthId;
+    markRowEdited();
   }
   function setSavings(e: ChangeEvent<HTMLInputElement>) {
     setSavingsState(e.target.checked);
