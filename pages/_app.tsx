@@ -6,12 +6,14 @@ import { SessionProvider } from 'next-auth/react';
 import LogOutButton from '@components/logoutbutton/logoutbutton';
 import useSWR from 'swr';
 import { fetcher } from 'util/graphQLFetcher';
+import { Account } from 'types/gql';
+import { GraphQLQuery } from 'hooks/useGraphQL';
 
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => {
-  const { data:accountsData } = useSWR('{ accounts{ id name }}');
+  const { data:accountsData } = GraphQLQuery('{ accounts{ id name }}');
   // const getLayout = Component.getLayout || ((page: ReactNode) => page);
 
   // useEffect(() => {
@@ -44,9 +46,9 @@ const MyApp = ({
           <div>
           <Link href="/">hem</Link> <Link href="/account/import">import</Link> <Link href="/month">månad</Link>
           {accountsData && (
-            accountsData.accounts.map((a, i) => (
+            accountsData.accounts.map((a:Account) => (
               <>
-              &nbsp;<Link key={i} href={{ pathname: '/account/[accountId]', query: { accountId: a.id } }}>{a.name}</Link>
+              &nbsp;<Link key={a.id} href={{ pathname: '/account/[accountId]', query: { accountId: a.id } }}>{a.name}</Link>
               </> 
             ))
           )
