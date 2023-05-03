@@ -148,6 +148,7 @@ export type QueryUserArgs = {
 
 export type SubRow = {
   __typename?: 'SubRow';
+  accountRow?: Maybe<AccountRow>;
   amount: Scalars['Float'];
   amountf: Scalars['String'];
   category?: Maybe<Category>;
@@ -332,6 +333,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type SubRowResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubRow'] = ResolversParentTypes['SubRow']> = {
+  accountRow?: Resolver<Maybe<ResolversTypes['AccountRow']>, ParentType, ContextType>;
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   amountf?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;

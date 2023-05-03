@@ -1,15 +1,15 @@
 import { Schema, Model, model, models, Types, PopulatedDoc } from 'mongoose';
 import { IAccountRow, ICategory } from '@models/index';
 
-export interface ISubRow {
+export type ISubRow = {
   _id?: Types.ObjectId;
   id?: string;
   accountRow: PopulatedDoc<IAccountRow['_id'] & IAccountRow>;
-  category: PopulatedDoc<ICategory['_id'] & ICategory>;
+  category?: PopulatedDoc<ICategory['_id'] & ICategory>;
   extra: boolean;
   amount: number;
   amountf: string;
-}
+};
 
 const SubRowSchema = new Schema<ISubRow>(
   {
@@ -24,7 +24,7 @@ const SubRowSchema = new Schema<ISubRow>(
     extra: {
       type: Boolean,
       required: true,
-      default: false
+      default: false,
     },
     amount: {
       type: Number,
